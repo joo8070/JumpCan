@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] int jumpPower;
     [SerializeField] PlayerAnim animClip;
     Animation anim;
-
+    Vector3 originPos;
     bool isJump;
     Rigidbody rigid;
 
@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody>();
         anim = GetComponent<Animation>();
+        
     }
 
     void Update()
@@ -34,7 +35,7 @@ public class PlayerController : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            //isJump = true;
+            isJump = true;
             rigid.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
 
             anim.clip = animClip.jump;
@@ -44,15 +45,15 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        //if(collision.transform.tag == "Block")
-        //{
-        //    if(isJump)
-        //    {
-        //        isJump = false;
-        //
-        //        anim.clip = animClip.idle;
-        //        anim.Play();
-        //    }
-        //}
+        if(collision.transform.tag == "Block")
+        {
+            if(isJump)
+            {
+                isJump = false;
+                //transform.position = new Vector3(0,transform.position.y, )
+                anim.clip = animClip.idle;
+                anim.Play();
+            }
+        }
     }
 }
