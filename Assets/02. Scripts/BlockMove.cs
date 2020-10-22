@@ -38,13 +38,20 @@ public class BlockMove : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            // 옆면에서 맞은거면 그냥 그대로 밀어버림
-            // 위면 멈춤
             isPlayerUp = true;
-            if (!isClear)
+
+            if (transform.position.y - collision.gameObject.transform.position.y < -0.12f)
             {
-                isClear = true;
-                GameManager.instance.ScoreUp();
+                if (!isClear)
+                {
+                    isClear = true;
+                    GameManager.instance.ScoreUp();
+                }
+            }
+            else
+            {
+                // 못탔을 경우
+                GameManager.instance.GameOver();
             }
         }
     }

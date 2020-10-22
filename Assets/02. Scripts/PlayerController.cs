@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] PlayerAnim animClip;
     Animation anim;
     Vector3 originPos;
+    Quaternion originRotation;
     bool isJump;
     Rigidbody rigid;
 
@@ -23,10 +24,14 @@ public class PlayerController : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody>();
         anim = GetComponent<Animation>();
+        originPos = transform.position;
+        originRotation = transform.rotation;
     }
 
     public void Jump()
     {
+        if (GameManager.instance.CurrentState != GameManager.GameState.GAMESTART) return;
+
         if (!isJump)
         {
             isJump = true;
@@ -49,4 +54,11 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    public void resetPos()
+    {
+        transform.position = originPos;
+        transform.rotation = originRotation;
+    }
+ 
 }

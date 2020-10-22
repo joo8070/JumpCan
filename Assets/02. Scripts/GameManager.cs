@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
         GAMESTART,
         GAMEOVER,
     }
+
+    PlayerController player;
     GameState currentState;                 // 현재 게임 상태
     public GameState CurrentState { get { return currentState; } set { currentState = value; } }
     [SerializeField] GameObject blockPrefab;
@@ -21,10 +23,13 @@ public class GameManager : MonoBehaviour
 
     int score = 0;
 
+    List<GameObject> blocks = new List<GameObject>(); //블록 관리
+
     void Awake()
     {
         if (instance == null) instance = this;
         currentState = GameState.GAMEREADY;
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
 
     public void StartGame()
@@ -46,6 +51,7 @@ public class GameManager : MonoBehaviour
             gap += 0.25f;
             isLeft = !isLeft;
             go.transform.parent = transform;
+            blocks.Add(go);
             yield return new WaitForSeconds(1.5f);
         }
     }
@@ -54,5 +60,25 @@ public class GameManager : MonoBehaviour
     {
         score++;
         uiManager.ScoreTextUpdate(score);
+    }
+
+    public void GameOver()
+    {
+        currentState = GameState.GAMEOVER;
+        StopAllCoroutines();
+        uiManager.GameOverUIActive(true);
+    }
+
+    public void ResetGame()
+    {
+        for(int i = 0; i < blocks.Count; ++i)
+        {
+            if (blocks[i] != null) Destroy(blocks[i]);
+        }
+        blocks.Clear();
+        score = 0;
+        player.resetPos();
+
+        StartGame(); // 다시시작
     }
 }
