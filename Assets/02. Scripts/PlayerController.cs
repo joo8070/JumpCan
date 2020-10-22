@@ -23,17 +23,11 @@ public class PlayerController : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody>();
         anim = GetComponent<Animation>();
-        
     }
 
-    void Update()
+    public void Jump()
     {
-        Jump();
-    }
-    
-    void Jump()
-    {
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (!isJump)
         {
             isJump = true;
             rigid.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
@@ -50,7 +44,6 @@ public class PlayerController : MonoBehaviour
             if(isJump)
             {
                 isJump = false;
-                //transform.position = new Vector3(0,transform.position.y, )
                 anim.clip = animClip.idle;
                 anim.Play();
             }

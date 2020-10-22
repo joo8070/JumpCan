@@ -12,26 +12,40 @@ public class BlockMove : MonoBehaviour
     Vector3 target;                      // 도착지점
     float speed;                         // 이동 스피드
 
+    bool isPlayerUp;
+    bool isClear;
     void Start()
     {
-        mesh = GetComponent<MeshRenderer>();
+        mesh = GetComponentInChildren<MeshRenderer>();
         mesh.material.mainTexture = textures[Random.Range(0, textures.Length)];
         target = transform.position;
         target.x = 0;
 
-        speed = Random.Range(0.8f, 1.2f);
+        speed = Random.Range(0.5f, 1.0f);
         StartCoroutine(Move());
     }
 
     IEnumerator Move()
     {
-        while (transform.position.x != 0)
+        while (transform.position.x != 0 && !isPlayerUp)
         {
-            transform.position = Vector3.MoveTowards(transform.position, target, Time.deltaTime * speed);
+            transform.position = Vector3.MoveTowards(transform.position, target, Time.deltaTime * 1);
             yield return null;
         }
-
-        transform.position = new Vector3(0, target.y, target.z);
     }
-   
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            // 옆면에서 맞은거면 그냥 그대로 밀어버림
+            // 위면 멈춤
+            isPlayerUp = true;
+            if (!isClear)
+            {
+                isClear = true;
+                GameManager.instance.ScoreUp();
+            }
+        }
+    }
 }
